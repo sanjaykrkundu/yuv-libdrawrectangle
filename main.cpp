@@ -1,6 +1,62 @@
 #include <iostream>
 #include <fstream>
 
+void drawRectangle(unsigned char* yImage, unsigned char* uvImage, int width, int height, int x1, int y1, int x2, int y2, int borderWidth, unsigned char yColor, unsigned char uColor, unsigned char vColor) {
+        // Draw Y component rectangle border
+        for (int y = y1; y <= y2; ++y) {
+            for (int b = 0; b < borderWidth; ++b) {
+                yImage[y * width + (x1 + b)] = yColor;
+
+                yImage[y * width + (x2 - b)] = yColor;
+            }
+        }
+
+        for (int x = x1; x <= x2; ++x) {
+            for (int b = 0; b < borderWidth; ++b) {
+                yImage[(y1 + b) * width + x] = yColor;
+
+                yImage[(y2 - b) * width + x] = yColor;
+            }
+        }
+
+        // Draw UV component rectangle border
+        x1 /= 2; // UV coordinates are half of Y coordinates
+        x2 /= 2;
+        y1 /= 2;
+        y2 /= 2;
+
+        for (int y = y1; y <= y2; ++y) {
+            for (int b = 0; b < borderWidth / 2; ++b) {
+                uvImage[y * width + (x1 + b)] = uColor;
+                uvImage[y * width + (x2 - b)] = uColor;
+            }
+        }
+
+        for (int x = x1; x <= x2; ++x) {
+            for (int b = 0; b < borderWidth / 2; ++b) {
+                uvImage[(y1 + b) * width + x] = uColor;
+                uvImage[(y2 - b) * width + x] = uColor;
+            }
+        }
+
+        // Draw V component rectangle border
+        for (int y = y1; y <= y2; ++y) {
+            for (int b = 0; b < borderWidth / 2; ++b) {
+                uvImage[width * height + y * width + (x1 + b)] = vColor;
+                uvImage[width * height + y * width + (x2 - b)] = vColor;
+            }
+        }
+
+        for (int x = x1; x <= x2; ++x) {
+            for (int b = 0; b < borderWidth / 2; ++b) {
+                uvImage[width * height + (y1 + b) * width + x] = vColor;
+                uvImage[width * height + (y2 - b) * width + x] = vColor;
+            }
+        }
+    }
+
+
+
 void drawRectangle(unsigned char* image, int width, int height, int x1, int y1, int x2, int y2, int borderWidth) {
     // Draw rectangle border
     for (int y = y1; y <= y2; ++y) {
